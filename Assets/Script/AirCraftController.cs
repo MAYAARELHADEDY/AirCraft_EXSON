@@ -39,8 +39,7 @@ public class AirCraftController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space)) throttle += throttleIncrease;
         else if (Input.GetKey(KeyCode.LeftControl)) throttle -= throttleIncrease;
-        throttleMax = Mathf.Clamp(throttle, 0f, 100f);
-        Debug.Log($"Throttle: {throttle}, Throttle Max: {throttleMax}");
+        throttle = Mathf.Clamp(throttle, 0f, 100f);
     }
 
     private void Update()
@@ -54,10 +53,9 @@ public class AirCraftController : MonoBehaviour
     private void FixedUpdate()
     {
         rb.AddForce(transform.forward * throttleMax * throttle );
-
         rb.AddTorque(transform.up * yaw * resModifiter);
         rb.AddTorque(transform.right * pitch * resModifiter);
-        rb.AddTorque(transform.forward * roll * resModifiter);
+        rb.AddTorque(-transform.forward * roll * resModifiter);
 
         rb.AddForce(Vector3.up * rb.velocity.magnitude *lift);
     }
