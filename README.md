@@ -59,7 +59,8 @@ public class AirCraftController : MonoBehaviour
     private void FixedUpdate() { /* Apply forces and torque to simulate flight */ }
 }
 ```
-
+![Description of Image](Assets/photos/dwe.PNG)
+![Description of Image](Assets/photos/sds.PNG)
 ## Getting Started
 
 To set up and run this project, follow these steps:
