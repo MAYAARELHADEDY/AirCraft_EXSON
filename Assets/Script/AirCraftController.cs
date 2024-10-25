@@ -1,30 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Content.Interaction;
 
 public class AirCraftController : MonoBehaviour
 {
-    public float throttleIncrease = 0.1f;
-    public float throttleMax = 200f;
+    [SerializeField] public float throttleIncrease = 0.1f;
+    [SerializeField] public float throttleMax = 200f;
+    [SerializeField] public float responsiveness = 10f;
 
-    public float responsiveness = 10f;
+    [SerializeField] public float throttle;
+    [SerializeField] private float roll;
+    [SerializeField] private float pitch;
+    [SerializeField] private float yaw;
+    [SerializeField] public float lift = 135f;
 
-    public float throttle;
-    private float roll;
-    private float pitch;
-    private float yaw;
-    public float lift = 135f;
+    public XRJoystick joystick;
+    public XRKnob knob;
 
-    [SerializeField] Transform propella;
-  
-    private float resModifiter{
+    [SerializeField] Transform propeller;
+
+    private float ResModifier
+    {
         get
         {
             return (rb.mass / 10f) * responsiveness;
         }
-
     }
-    Rigidbody rb;
+
+    private Rigidbody rb;
 
     private void Awake()
     {
@@ -33,30 +37,26 @@ public class AirCraftController : MonoBehaviour
 
     private void HandleInput()
     {
-        roll = Input.GetAxis("Roll");
-        pitch = Input.GetAxis("Pitch");
-        yaw = Input.GetAxis("Yaw");
+        roll = joystick.value.x;   // Horizontal joystick movement for Roll
+        pitch = joystick.value.y;  // Vertical joystick movement for Pitch
 
-        if (Input.GetKey(KeyCode.Space)) throttle += throttleIncrease;
-        else if (Input.GetKey(KeyCode.LeftControl)) throttle -= throttleIncrease;
-        throttle = Mathf.Clamp(throttle, 0f, 100f);
+        // Using XR Knob for Yaw and Throttle
+        yaw = knob.value; // Rotation value of knob for Yaw
+        throttle = Mathf.Clamp(knob.value * throttleMax, 0f, throttleMax);
     }
 
     private void Update()
     {
         HandleInput();
+        propeller.Rotate(Vector3.right * throttle);
+    }
 
-        propella.Rotate(Vector3.right * throttle);
-        
-       
-     }
     private void FixedUpdate()
     {
-        rb.AddForce(transform.forward * throttleMax * throttle );
-        rb.AddTorque(transform.up * yaw * resModifiter);
-        rb.AddTorque(transform.right * pitch * resModifiter);
-        rb.AddTorque(-transform.forward * roll * resModifiter);
-
-        rb.AddForce(Vector3.up * rb.velocity.magnitude *lift);
+        rb.AddForce(transform.forward * throttleMax * throttle);
+        rb.AddTorque(transform.up * yaw * ResModifier);
+        rb.AddTorque(transform.right * pitch * ResModifier);
+        rb.AddTorque(-transform.forward * roll * ResModifier);
+        rb.AddForce(Vector3.up * rb.velocity.magnitude * lift);
     }
 }
