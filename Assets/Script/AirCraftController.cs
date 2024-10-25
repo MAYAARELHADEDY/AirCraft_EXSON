@@ -17,7 +17,7 @@ public class AirCraftController : MonoBehaviour
 
     public XRJoystick joystick;
     public XRKnob knob;
-
+    
     [SerializeField] Transform propeller;
 
     private float ResModifier
@@ -27,12 +27,13 @@ public class AirCraftController : MonoBehaviour
             return (rb.mass / 10f) * responsiveness;
         }
     }
-
+   
     private Rigidbody rb;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+      
     }
 
     private void HandleInput()
@@ -48,12 +49,14 @@ public class AirCraftController : MonoBehaviour
     private void Update()
     {
         HandleInput();
-        propeller.Rotate(Vector3.right * throttle);
+        propeller.Rotate(Vector3.right * throttle);// to make a fan move with the engine im same direction
+        
     }
 
-    private void FixedUpdate()
+    private void FixedUpdate() // used fixedupdate beacouse ian update in physics
     {
-        rb.AddForce(transform.forward * throttleMax * throttle);
+        //to add force to forward 
+        rb.AddForce(transform.forward * throttleMax * throttle); 
         rb.AddTorque(transform.up * yaw * ResModifier);
         rb.AddTorque(transform.right * pitch * ResModifier);
         rb.AddTorque(-transform.forward * roll * ResModifier);

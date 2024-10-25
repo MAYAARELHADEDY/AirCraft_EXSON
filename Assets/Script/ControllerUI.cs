@@ -23,9 +23,9 @@ public class ControllerUI : MonoBehaviour
     }
     private void UpdateUI()
     {
-        throttle.text = (aircraft.throttle).ToString("F0") +"%"; //speed
-        airspeed.text = (rb.velocity.magnitude *3.6f).ToString("F0")+ "km/h"; //KE
-        altitude.text = (aircraft.transform.position.y).ToString("F0")+ "m"; //PE  
+        throttle.text = (aircraft.throttle).ToString("F0") +"%"; //to represent throttle
+        airspeed.text = (rb.velocity.magnitude *3.6f).ToString("F0")+ "km/h"; //to represent airspeed
+        altitude.text = (aircraft.transform.position.y).ToString("F0")+ "m"; //to represent altitude
 
     }
 }
